@@ -120,7 +120,8 @@ module.exports = {
     createRedisConnection,
     addNewRoom,
     createRandomRoomsCluster,
-    addNewRandomRoom
+    addNewRandomRoom,
+    getRandomRoomId
 };
 
 
