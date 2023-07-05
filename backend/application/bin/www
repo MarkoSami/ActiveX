@@ -1,0 +1,170 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+let app = require('../app');
+let debug = require('debug')('application:server');
+let http = require('http');
+let redisLib = require('../lib/reidsLib');
+
+// creating redis connection
+redisLib.createRedisConnection();
+//////
+
+
+
+
+
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+let port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+let server = http.createServer(app);
+
+
+// establish socketIO server
+const io = require('socket.io')(server, {
+  cors: {
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true
+  }
+});
+
+// Store room information in redis 
+// creating redis rooms
+
+
+
+redisLib.createRoomsCluster();
+
+io.on("connection", (socket) => {
+  // console.log(socket.id);
+
+  // join new room event 
+  socket.on("join_room", () => {
+    let roomId = uuidv4();
+    socket.join(roomId);
+    redisLib.addNewRoom(roomId);
+    console.log("User joined room: " + roomId);
+  });
+
+  socket.on("join_random_room", () => {
+    let roomId = redisLib.getRandomRoomId();
+    socket.join(roomId);
+    console.log("User joined room: " + roomId);
+  });
+
+
+
+  socket.on("sendMessagePrivate", (data) => {
+    socket.to(data.messageData.room).emit("messageReceived", data);
+    // console.log(`Broadcasted a message to all the clients... message: ${data}`);
+  });
+
+  socket.on("sendMessage", (data) => {
+    console.log(data);
+    socket.broadcast.emit("messageReceived", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected: " + socket.id);
+
+    // Remove disconnected user from room information
+    Object.keys(rooms).forEach((room) => {
+      const index = rooms[room].indexOf(socket.id);
+      if (index !== -1) {
+        rooms[room].splice(index, 1);
+      }
+      if (rooms[room].length === 0) {
+        delete rooms[room];
+      }
+    });
+
+    // Print all room IDs and connected users after disconnect
+    console.log("Rooms and connected users:");
+    Object.keys(rooms).forEach((room) => {
+      console.log("Room:", room);
+      console.log("Users:", rooms[room]);
+    });
+  });
+});
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  let port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  let bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  let addr = server.address();
+  let bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
