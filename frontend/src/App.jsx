@@ -22,7 +22,7 @@ function App() {
 
     const router = createHashRouter( createRoutesFromElements(
     <>
-      <Route path="/" element={<Home />} loader={auth} />
+      <Route path="/" element={<Home />}  />
       <Route
         key={location.pathname} // Use the current path as the key
         path="sign-in"
@@ -42,9 +42,9 @@ function App() {
           />
         }
       />
-      <Route path="party" element={<Party />} />
+      <Route path="party" element={<Party />}  loader={auth} />
       <Route path="Chat">
-        <Route index element={<ChatSection  />} />
+        <Route index element={<ChatSection  />} loader={auth} />
         <Route path="random-chat" element={<Chat />} />
         <Route path="private-chat" element={<PrivateChat />} />
       </Route>

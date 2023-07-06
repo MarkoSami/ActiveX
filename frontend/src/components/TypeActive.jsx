@@ -16,11 +16,11 @@ export default function TypeActive({ type = "Draw" }) {
         setHoverHandle(true);
       }}
       to={type}
-      className={`w-[100%] ${
+      className={`w-[100%] m-[0.5em] ${
         hoverHandle ? "transiton-effect" : "transiton-effect-leave"
-      }  bg-[#3d3d3d4f] min-h-[200px] rounded transition hover:bg-indigo-500`}
+      }  bg-[#3d3d3d4f] min-h-[200px] rounded transition hover:bg-blue-500`}
     >
-      <div className="w-[30%] mx-auto py-[2em]">
+      <div className="py-[2em]">
         {type === "Party" ? (
           <GiPartyPopper className="text-white mx-auto w-[100px] h-[100px]" />
         ) : type === "Chat" ? (
@@ -30,7 +30,7 @@ export default function TypeActive({ type = "Draw" }) {
         )}
         <h1
           className={`text-[2rem] font-black ${
-            !hoverHandle ? "text-indigo-400" : "text-white"
+            !hoverHandle ? "text-blue-400" : "text-white"
           } text-center py-[1em]`}
         >
           {type}

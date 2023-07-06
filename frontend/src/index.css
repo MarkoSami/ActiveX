@@ -22,12 +22,10 @@
   box-sizing: border-box;
 }
 
-
-
-
 body {
   margin: 0;
   min-width: 320px;
+  display: block;
   cursor: url("./media/cursor.png"), auto;
 }
 
@@ -63,18 +61,23 @@ button:focus-visible {
   }
 }
 #root {
-  background-image: url(./media/bg.png);
+  background-image: url(./media/bg.svg);
   background-position: center;
   background-size: cover;
-  min-height: 100vh; /* Set the minimum height of the root element to 100vh */
-  display: flex; /* Use flexbox to make child elements fill the height */
-  flex-direction: column; /* Arrange child elements vertically */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
 }
 
 .child {
-  flex: 1; /* Make child elements expand to fill available vertical space */
-  position: relative;
+  width: 100%;
+  min-height: 100vh;
 }
+.grand-child { 
+  height: 100vh;
+}
+
 .transiton-effect {
   transition: 0.6s all;
   transform: scale(1.1);
@@ -102,7 +105,7 @@ button:focus-visible {
 .point {
   min-width: 10px;
   height: 10px;
-  background-color: #6366f1;
+  background-color: #2563eb;
   clip-path: circle();
 }
 .text-wrap {
@@ -147,14 +150,14 @@ button:focus-visible {
   }
 }
 
-.grand-child {
-  position: absolute; /* Position the grandchild element */
-  top: 0; /* Position it at the top of the parent (child) element */
-  left: 0; /* Position it at the left of the parent (child) element */
-  right: 0; /* Position it at the right of the parent (child) element */
-  bottom: 0; /* Position it at the bottom of the parent (child) element */
-}
- 
+/* .grand-child {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+} */
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -163,6 +166,6 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }

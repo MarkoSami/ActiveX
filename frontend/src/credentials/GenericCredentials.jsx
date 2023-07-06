@@ -10,11 +10,11 @@ export default function Register(props) {
   
   const signLink = props.signStatus ? "sign-up" : "sign-in";
   return (
-    <div className="container m-auto h-full">
-      <div className="flex w-full bg-abstract h-full justify-between animate__animated animate__fadeIn">
+    <div className="container m-auto child">
+      <div className="flex w-full grand-child bg-abstract h-full justify-between animate__animated animate__fadeIn">
         <div className="flex flex-col justify-between h-[65%] my-auto">
           <h1 className="font-black text-[2rem]">
-            Active<span className="text-[2rem] text-indigo-600">X</span>
+            Active<span className="text-[2rem] text-blue-600">X</span>
           </h1>
           <div>
             <h3 className="text-[1.5rem] max-w-[60%] font-bold">
@@ -24,7 +24,7 @@ export default function Register(props) {
               {props.signStatus
                 ? "If you don’t have an account You can"
                 : "If you have an account You can"}{" "}
-              <Link to={`/${signLink}`}>
+              <Link className="text-blue-300 font-bold" to={`/${signLink}`}>
                 {props.signStatus ? "Sign Up" : "Sign in"}
               </Link>
             </p>
@@ -39,7 +39,7 @@ export default function Register(props) {
                 Reset Password
               </Link>
             )}
-            <button className="bg-indigo-500">
+            <button className="bg-blue-500">
               {props.signStatus ? "Sign in" : "Sign Up"}
             </button>
           </form>

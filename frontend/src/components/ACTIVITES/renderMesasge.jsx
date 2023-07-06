@@ -20,8 +20,8 @@ export default function Messages({ message, username }) {
           <div
             className={`py-[0.5em] px-[1em] rounded-lg max-w-[70%] my-[0.5em] w-fit ${
               messageData.author !== username
-                ? "mr-auto bg-none border border-indigo-600"
-                : "ml-auto bg-indigo-600"
+                ? "mr-auto bg-none border border-blue-600"
+                : "ml-auto bg-blue-600"
             } text-wrap`}
           >
             {messageData.message}

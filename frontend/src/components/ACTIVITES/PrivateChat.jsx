@@ -23,14 +23,15 @@ const PrivateChat = () => {
           {!isConnected && (
             <>
               <Link to=".." className="text-white block m-[2em]">
-                <BiArrowBack className="mr-[1em] cursor-pointer rounded-lg bg-indigo-500 hover:bg-transparent tranistion duration-200 hover:border hover:border-indigo-600 min-w-[28px] min-h-[28px] p-[0.2em]" />
+                <BiArrowBack className="mr-[1em] cursor-pointer rounded-lg bg-blue-500 hover:bg-transparent tranistion duration-200 hover:border hover:border-blue-600 min-w-[28px] min-h-[28px] p-[0.2em]" />
               </Link>{" "}
             </>
           )}
-          <div className="bottom-side flex flex-col w-[80%] mx-auto items-center h-full">
-            <h1 className="text-center text-2xl py-[1em] font-black">
+          <div className="bottom-side flex flex-col w-[80%] mx-auto items-center h-full justify-center">
+            <h1 className={`text-center text-2xl ${isConnected && "pt-[1em]" } pb-[1em] font-black`}>
               WARNING! THIS IS BETA VERSION.
             </h1>
+            
             {!isConnected && (
               <>
                 <div className="inputs w-[25%] flex flex-col">
@@ -53,19 +54,26 @@ const PrivateChat = () => {
                     }}
                   />
                 </div>
-                <div className="buttons-chat-section flex">
+                <div className="buttons-chat-section flex items-center">
                   <button
                     onClick={joinRoom}
-                    className="border my-[2em] border-indigo-600 text-white p-[1em] m-0 transition rounded m-[1em] duration-300 hover:bg-white hover:text-indigo-600"
+                    className="border my-[2em] border-blue-600 text-white p-[1em] m-0 transition rounded m-[1em] duration-300 hover:bg-white hover:text-blue-600"
                   >
                     Connect
+                  </button>
+                  <p>or</p>
+                      <button
+                    onClick={joinRoom}
+                    className="border my-[2em] border-blue-600 text-white p-[1em] m-0 transition rounded m-[1em] duration-300 hover:bg-white hover:text-blue-600"
+                  >
+                    Generate your
                   </button>
                 </div>{" "}
               </>
             )}
 
             {isConnected && (
-              <Chat userName={userName} roomId={roomId} />
+              <Chat fullWindow={false} userName={userName} roomId={roomId} />
             )}
           </div>
         </div>
