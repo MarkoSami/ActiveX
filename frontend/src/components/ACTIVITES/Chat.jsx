@@ -7,7 +7,12 @@ import ScrollToBottom from "react-scroll-to-bottom";
 import "animate.css";
 import { SocketContext } from "../../APIS/sockectContext";
 import { useContext } from "react";
-export default function Chat({ userName = "", roomId  , fullWindow = true}) {
+export default function Chat({
+  isChild = false,
+  userName = "",
+  roomId,
+  fullWindow = true,
+}) {
   const [messages, setMessages] = useState([]);
   const socket = useContext(SocketContext);
 
@@ -33,8 +38,6 @@ export default function Chat({ userName = "", roomId  , fullWindow = true}) {
       socket.disconnect();
     };
   }, []);
-
-
 
   async function handleSendButton(input) {
     const messageText = input.current.value;
@@ -65,15 +68,16 @@ export default function Chat({ userName = "", roomId  , fullWindow = true}) {
     }
   };
 
-
   const myInput = useRef(null);
 
   return (
     <div
-      className={`bg-effect ${fullWindow && "child"} min-w-[30%] w-full flex items-center justify-center rounded animate__animated animate__zoomIn`}
+      className={`bg-effect p-[1em] min-w-[30%] ${
+        isChild ? "h-full" : "h-[100vh]"
+      } h-full min-h-inherit w-full flex items-center justify-center rounded animate__animated animate__zoomIn`}
     >
-      <div className={`p-[1em] h-full rounded ${fullWindow && "grand-child"} w-full`}>
-        <section className="h-full mb-[1em] p-[1em] rounded flex flex-col justify-between">
+      <div className={`rounded w-full h-full`}>
+        <section className="mb-[1em] h-full rounded flex flex-col">
           <div className="top-side-chat flex justify-between items-center">
             <h3 className="font-black text-xl flex items-center">
               {" "}
@@ -84,10 +88,14 @@ export default function Chat({ userName = "", roomId  , fullWindow = true}) {
             </h3>
             <h3 className="text-md"></h3>
           </div>
-
-          <ScrollToBottom className="my-[1.5em] scroll">
+          <ScrollToBottom className="my-[1.5em] h-[80%] scroll">
             {messages.map((message) => {
-              return <Messages message={message} username={userName ? userName : socket.id} />;
+              return (
+                <Messages
+                  message={message}
+                  username={userName ? userName : socket.id}
+                />
+              );
             })}
           </ScrollToBottom>
 

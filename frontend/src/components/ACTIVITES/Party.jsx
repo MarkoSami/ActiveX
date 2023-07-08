@@ -14,7 +14,6 @@ export default function Party({ host = false }) {
   const [roomId, setRoomId] = useState({});
   let [SearchData, setSearchData] = useState({});
   let [mySrcVideo, setSrcVideo] = useState("");
-  let [isFirstPlayed, setISFirstPlayed] = useState(false);
   const socket = useContext(SocketContext);
 
   function handleRoomID(data) {
@@ -33,32 +32,35 @@ export default function Party({ host = false }) {
   useEffect(() => {
     socket.emit("join_random_room");
     socket.on("joined_random_room", handleRoomID);
-    socket.on("video_started");
-    socket.on("video_paused");
-    socket.on("video_timeChanged");
-    socket.on("video_URLChanged");
+    socket.on("video_started", () => {
+      // Handle video started event
+    });
+    socket.on("video_paused", () => {
+      // Handle video paused event
+    });
+
+    socket.on("video_URLChanged", (url) => {
+      // Handle video URL changed event
+    });
+
+    // Clean up the event listeners when the component unmounts
+    return () => {
+      socket.off("joined_random_room", handleRoomID);
+      socket.off("video_started");
+      socket.off("video_paused");
+      socket.off("video_URLChanged");
+    };
   }, []);
 
-  // IFRAME YOUTUBE
-  function handleIframeChange(event) {
-    const { player, data } = event;
-    console.log(event.target.getCurrentTime());
-    if (isFirstPlayed) {
-      if (data === 3) {
-        socket.emit("video_timeChanged", event.target.getCurrentTime())
-      }
-    }
-  }
-
   function handleOnPause() {
-    console.log("isPaused");
     socket.emit("video_paused", roomId);
   }
 
-  function handleOnPlay() {
-    console.log("isPlayed");
-    setISFirstPlayed(true);
-    socket.emit("video_started", roomId);
+  function handleOnPlay(event) {
+    socket.emit("video_started", {
+      roomId,
+      CurrentTime: event.target.getCurrentTime(),
+    });
   }
 
   function convertToValidKey(str) {
@@ -78,6 +80,7 @@ export default function Party({ host = false }) {
 
     return validKey;
   }
+
   function getYouTubeVideoId(link) {
     const url = new URL(link);
     const searchParams = new URLSearchParams(url.search);
@@ -86,11 +89,12 @@ export default function Party({ host = false }) {
 
   function HandleSearch() {
     setSrcVideo(String(getYouTubeVideoId(SearchData.searchForVideo)));
+    socket.emit("Url_is_changed", { roomId, mySrcVideo });
   }
 
   return (
     <>
-      <div className="animate__animated animate__fadeIn child">
+      <div className="animate__animated animate__fadeIn child bg-effect">
         <main className="grand-child">
           <div className="topside mx-auto flex justify-between px-[3em]">
             <Link
@@ -129,7 +133,6 @@ export default function Party({ host = false }) {
                 className="min-w-[70%] h-full"
                 videoId={mySrcVideo}
                 iframeClassName={"w-full h-full"}
-                onStateChange={handleIframeChange}
                 onPause={handleOnPause}
                 onPlay={handleOnPlay}
               />
@@ -139,7 +142,7 @@ export default function Party({ host = false }) {
                 Your Video Should Show here{" "}
               </div>
             )}
-            <Chat fullWindow={false} socket={socket} />
+            <Chat isChild={true} fullWindow={false} socket={socket} />
           </div>
         </main>
       </div>

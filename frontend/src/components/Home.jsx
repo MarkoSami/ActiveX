@@ -11,6 +11,7 @@ import "animate.css";
 import music from "../media/audio/music.mp3"
 export default function Home() {
 
+
   return (
     <div className="home bg-effect child">
       <div className="container mx-auto animate__animated animate__zoomIn py-[2em]">
@@ -33,7 +34,7 @@ export default function Home() {
               className="w-[20%] py-[1em] bg-blue-600 hover:bg-white hover:text-black transition"
               onClick={() =>
                 scroller.scrollTo("home2", {
-                  duration: 1500,
+                  duration: 800,
                   delay: 100,
                   smooth: true,
                   offset: -50, // Optional offset, adjust as needed
@@ -102,7 +103,7 @@ export default function Home() {
             <span className="text-blue-400">~ Invajy</span>
           </h3>
           <div className="flex justify-between w-[50%] mx-auto py-[2em]">
-            <TypeActiveButton type="Party" />
+            <TypeActiveButton type="party-section" name = "Party" />
             <TypeActiveButton type="Chat" />
             <TypeActiveButton type="Drawing" />
           </div>

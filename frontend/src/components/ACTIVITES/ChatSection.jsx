@@ -5,7 +5,7 @@ import { BiArrowBack } from "react-icons/bi";
 
 const ChatSection = () => {
   return (
-    <div className="child">
+    <div className="child bg-effect">
       <div className="grand-child min-h-[80vh] animate__animated animate__zoomInUp">
         <div className="container h-[70%] mx-auto ">
           <div className="bottom-side flex flex-col items-center justify-center h-full">

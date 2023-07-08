@@ -128,13 +128,13 @@ button:focus-visible {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #4f46e5;
+  background-color: #2563eb;
   border-radius: 10px;
 }
 
 .bg-effect {
-  -webkit-backdrop-filter: blur(5px); /* Safari 9+ and Chrome */
-  backdrop-filter: blur(30px); /* Standard syntax */
+  -webkit-backdrop-filter: blur(20px); /* Safari 9+ and Chrome */
+  backdrop-filter: blur(20px); /* Standard syntax */
 
   /* Vendor prefixes for different browser engines */
   @supports (
@@ -168,4 +168,7 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+.min-h-inherit { 
+  min-height: inherit;
 }

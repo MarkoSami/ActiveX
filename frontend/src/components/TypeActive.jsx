@@ -4,7 +4,7 @@ import { BsFillChatFill } from "react-icons/bs";
 import { MdOutlineDraw } from "react-icons/md";
 import { useState } from "react";
 
-export default function TypeActive({ type = "Draw" }) {
+export default function TypeActive({ type = "Draw" ,  name = type }) {
   const [hoverHandle, setHoverHandle] = useState(false);
 
   return (
@@ -21,9 +21,9 @@ export default function TypeActive({ type = "Draw" }) {
       }  bg-[#3d3d3d4f] min-h-[200px] rounded transition hover:bg-blue-500`}
     >
       <div className="py-[2em]">
-        {type === "Party" ? (
+        {name === "Party" ? (
           <GiPartyPopper className="text-white mx-auto w-[100px] h-[100px]" />
-        ) : type === "Chat" ? (
+        ) : name === "Chat" ? (
           <BsFillChatFill className="text-white mx-auto w-[100px] h-[100px]" />
         ) : (
           <MdOutlineDraw className="text-white mx-auto w-[100px] h-[100px]" />
@@ -33,7 +33,7 @@ export default function TypeActive({ type = "Draw" }) {
             !hoverHandle ? "text-blue-400" : "text-white"
           } text-center py-[1em]`}
         >
-          {type}
+          {name}
         </h1>
       </div>
     </Link>

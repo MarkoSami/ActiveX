@@ -6,7 +6,7 @@ import Chat from "./Chat";
 import { SocketContext } from "../../APIS/sockectContext";
 
 const PrivateChat = () => {
-  const socket = useContext(SocketContext)
+  const socket = useContext(SocketContext);
   const [userName, setUserName] = useState("");
   const [roomId, setRoomId] = useState("");
   const [isConnected, setIsConntected] = useState(false);
@@ -17,21 +17,25 @@ const PrivateChat = () => {
     }
   }
   return (
-    <div className="child">
-      <div className="grand-child min-h-[80vh] animate__animated animate__zoomInUp">
-        <div className={`${isConnected ? "h-[100%]" : "h-[90%]"}`}>
-          {!isConnected && (
-            <>
-              <Link to=".." className="text-white block m-[2em]">
-                <BiArrowBack className="mr-[1em] cursor-pointer rounded-lg bg-blue-500 hover:bg-transparent tranistion duration-200 hover:border hover:border-blue-600 min-w-[28px] min-h-[28px] p-[0.2em]" />
-              </Link>{" "}
-            </>
-          )}
-          <div className="bottom-side flex flex-col w-[80%] mx-auto items-center h-full justify-center">
-            <h1 className={`text-center text-2xl ${isConnected && "pt-[1em]" } pb-[1em] font-black`}>
+    <div>
+      <div className="animate__animated animate__zoomInUp">
+        {!isConnected && (
+          <>
+            <Link to=".." className="text-white block m-[2em]">
+              <BiArrowBack className="mr-[1em] cursor-pointer rounded-lg bg-blue-500 hover:bg-transparent tranistion duration-200 hover:border hover:border-blue-600 min-w-[28px] min-h-[28px] p-[0.2em]" />
+            </Link>{" "}
+          </>
+        )}
+        <div className={`section-1 ${isConnected ? "h-[95vh]" : "h-[80vh]" }  flex items-center justify-center`}>
+          <div className="bottom-side h-full flex flex-col w-[80%] mx-auto items-center justify-center">
+            <h1
+              className={`text-center text-2xl ${
+                isConnected && "pt-[1em]"
+              } pb-[1em] font-black`}
+            >
               WARNING! THIS IS BETA VERSION.
             </h1>
-            
+
             {!isConnected && (
               <>
                 <div className="inputs w-[25%] flex flex-col">
@@ -62,7 +66,7 @@ const PrivateChat = () => {
                     Connect
                   </button>
                   <p>or</p>
-                      <button
+                  <button
                     onClick={joinRoom}
                     className="border my-[2em] border-blue-600 text-white p-[1em] m-0 transition rounded m-[1em] duration-300 hover:bg-white hover:text-blue-600"
                   >
@@ -73,7 +77,7 @@ const PrivateChat = () => {
             )}
 
             {isConnected && (
-              <Chat fullWindow={false} userName={userName} roomId={roomId} />
+              <Chat isChild={true} fullWindow={false} userName={userName} roomId={roomId} />
             )}
           </div>
         </div>
