@@ -21,7 +21,7 @@ export default function Party({ host = false }) {
     console.log(data);
     setRoomId(data);
   }
-
+  
   const handleSeekTo = (seconds) => {
     if (playerRef.current) {
       playerRef.current.seekTo(seconds);
@@ -37,17 +37,17 @@ export default function Party({ host = false }) {
     socket.emit("join_random_room");
     socket.on("joined_random_room", handleRoomID);
 
-    socket.on("video_ready", (URLData) => {
+    socket.on("video_ready_to", (URLData) => {
+      HandleSearch(URLData);
       setSearchData(URLData);
-      HandleSearch();
     });
 
-    socket.on("video_started", (Time) => {
+    socket.on("video_started_to", (Time) => {
       // Handle video started event
-      handleSeekTo(Time)
+      handleSeekTo(Time);
     });
 
-    socket.on("video_paused", () => {
+    socket.on("video_paused_to", () => {
       // Handle video paused event
       playerRef.current.pauseVideo();
     });
@@ -55,9 +55,9 @@ export default function Party({ host = false }) {
     // Clean up the event listeners when the component unmounts
     return () => {
       socket.off("joined_random_room", handleRoomID);
-      socket.off("video_started");
-      socket.off("video_paused");
-      socket.off("video_ready");
+      socket.off("video_started_to");
+      socket.off("video_paused_to");
+      socket.off("video_ready_to");
     };
   }, []);
 
@@ -66,13 +66,13 @@ export default function Party({ host = false }) {
   }
 
   function handleOnPlay(event) {
-    socket.emit("video_started", {
-      roomId,
-      currentTime: event.target.getCurrentTime(),
-    });
+      socket.emit("video_started", {
+        roomId,
+        currentTime: event.target.getCurrentTime(),
+      });
   }
 
-  function handleOnReady() { 
+  function handleOnReady() {
     socket.emit("video_ready", {
       roomId,
       video_URL: SearchData,
@@ -98,13 +98,14 @@ export default function Party({ host = false }) {
   }
 
   function getYouTubeVideoId(link) {
+    console.log(link);
     const url = new URL(link);
     const searchParams = new URLSearchParams(url.search);
     return searchParams.get("v");
   }
 
-  function HandleSearch() {
-    setSrcVideo(String(getYouTubeVideoId(SearchData)));
+  function HandleSearch(Data) {
+    setSrcVideo(String(getYouTubeVideoId(Data)));
   }
 
   return (
@@ -130,7 +131,9 @@ export default function Party({ host = false }) {
                 onChange={handleData}
               />
               <button
-                onClick={HandleSearch}
+                onClick={() => {
+                  HandleSearch(SearchData);
+                }}
                 className="border-1 border-blue-600 h-[43px] ml-[1rem] rounded hover:bg-blue-500 transition duration-300"
               >
                 Search

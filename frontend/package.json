@@ -22,7 +22,9 @@
     "react-scroll": "^1.8.9",
     "react-scroll-to-bottom": "^4.2.0",
     "react-youtube": "^10.1.0",
-    "socket.io-client": "^4.7.1"
+    "socket.io-client": "^4.7.1",
+    "use-state-callback": "^1.1.3",
+    "use-state-with-callback": "^3.0.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",
