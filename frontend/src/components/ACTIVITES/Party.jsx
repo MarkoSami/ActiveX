@@ -14,6 +14,7 @@ export default function Party({ host = false }) {
   const [roomId, setRoomId] = useState({});
   let [SearchData, setSearchData] = useState();
   let [mySrcVideo, setSrcVideo] = useState("");
+  let [canIEmit, setCanIemit] = useState(true);
   const playerRef = useRef(null);
   const socket = useContext(SocketContext);
 
@@ -21,10 +22,12 @@ export default function Party({ host = false }) {
     console.log(data);
     setRoomId(data);
   }
-  
+
   const handleSeekTo = (seconds) => {
     if (playerRef.current) {
       playerRef.current.seekTo(seconds);
+      playerRef.current.playVideo();
+      console.log('video played ' + canIEmit);
     }
   };
 
@@ -44,6 +47,7 @@ export default function Party({ host = false }) {
 
     socket.on("video_started_to", (Time) => {
       // Handle video started event
+      setCanIemit(false);
       handleSeekTo(Time);
     });
 
@@ -66,10 +70,15 @@ export default function Party({ host = false }) {
   }
 
   function handleOnPlay(event) {
+    if (canIEmit) {
       socket.emit("video_started", {
         roomId,
         currentTime: event.target.getCurrentTime(),
       });
+    } else {
+      setCanIemit(true);
+    }
+
   }
 
   function handleOnReady() {
