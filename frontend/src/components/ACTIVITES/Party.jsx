@@ -9,8 +9,10 @@ import { io } from "socket.io-client";
 import { SocketContext } from "../../APIS/sockectContext";
 import { useContext } from "react";
 import YouTube from "react-youtube";
-
-export default function Party({ host = false }) {
+import { useSearchParams } from "react-router-dom";
+export default function Party() {
+  const [searchParams , setSearchParams] = useSearchParams();
+  const isPrivate = searchParams.get('private');
   const [roomId, setRoomId] = useState({});
   let [SearchData, setSearchData] = useState();
   let [mySrcVideo, setSrcVideo] = useState("");
@@ -27,7 +29,7 @@ export default function Party({ host = false }) {
     if (playerRef.current) {
       playerRef.current.seekTo(seconds);
       playerRef.current.playVideo();
-      console.log('video played ' + canIEmit);
+      console.log("video played " + canIEmit);
     }
   };
 
@@ -78,7 +80,6 @@ export default function Party({ host = false }) {
     } else {
       setCanIemit(true);
     }
-
   }
 
   function handleOnReady() {
@@ -121,32 +122,39 @@ export default function Party({ host = false }) {
     <>
       <div className="animate__animated animate__fadeIn child bg-effect">
         <main className="grand-child">
-          <div className="topside mx-auto flex justify-between px-[3em]">
+          <div className="topside mx-auto flex justify-between items-center px-[3em]">
             <Link
               to=".."
               className="text-white font-black hover:text-white text-left text-[2rem] py-[1em]"
             >
               Activity<span className="text-blue-600">X</span>
             </Link>
-            <div className="search-bar w-fit flex items-center py-[2em] relative">
-              <div className="iconContainer absolute bottom-[35px] left-[-70px] ">
-                <AiFillYoutube className="w-[50px] h-[50px]" />
+            <div className="right-side flex items-center">
+              {isPrivate && (
+                <div className="room-id mx-[90px] border-blue-600 border rounded p-[1em]">
+                  Room ID : ggdklgdj2w529582fjd{" "}
+                </div>
+              )}
+              <div className="search-bar w-fit flex items-center py-[2em] relative">
+                <div className="iconContainer absolute bottom-[35px] left-[-70px] ">
+                  <AiFillYoutube className="w-[50px] h-[50px]" />
+                </div>
+                <input
+                  className="bg-[#ffffff0f] md:min-w-[600px] h-[40px] rounded text-white px-[10px] my-[0.5em] bg-[#050816] border-[1px]"
+                  type={"text"}
+                  placeholder={`Search for Youtube Video`}
+                  value={SearchData}
+                  onChange={handleData}
+                />
+                <button
+                  onClick={() => {
+                    HandleSearch(SearchData);
+                  }}
+                  className="border-1 border-blue-600 h-[43px] ml-[1rem] rounded hover:bg-blue-500 transition duration-300"
+                >
+                  Search
+                </button>
               </div>
-              <input
-                className="bg-[#ffffff0f] md:min-w-[600px] h-[40px] rounded text-white px-[10px] my-[0.5em] bg-[#050816] border-[1px]"
-                type={"text"}
-                placeholder={`Search for Youtube Video`}
-                value={SearchData}
-                onChange={handleData}
-              />
-              <button
-                onClick={() => {
-                  HandleSearch(SearchData);
-                }}
-                className="border-1 border-blue-600 h-[43px] ml-[1rem] rounded hover:bg-blue-500 transition duration-300"
-              >
-                Search
-              </button>
             </div>
           </div>
           <div className="main-section w-[95%] mx-auto flex h-[80%] min-h-[80%] rounded justify-between">
