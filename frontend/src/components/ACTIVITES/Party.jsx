@@ -11,9 +11,10 @@ import { useContext } from "react";
 import YouTube from "react-youtube";
 import { useSearchParams } from "react-router-dom";
 export default function Party() {
-  const [searchParams , setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const isPrivate = searchParams.get('private');
-  const [roomId, setRoomId] = useState({});
+
+  const [roomId, setRoomId] = useState(searchParams.get('roomId'));
   let [SearchData, setSearchData] = useState();
   let [mySrcVideo, setSrcVideo] = useState("");
   let [canIEmit, setCanIemit] = useState(true);
@@ -39,13 +40,18 @@ export default function Party() {
   }
 
   useEffect(() => {
-    socket.emit("join_random_room");
-    socket.on("joined_random_room", handleRoomID);
+    if (!isPrivate) {
+      socket.emit("join_random_room");
+      socket.on("joined_random_room", handleRoomID);
+    } else {
 
+      socket.on('room_created', handleRoomID);
+    }
     socket.on("video_ready_to", (URLData) => {
       HandleSearch(URLData);
       setSearchData(URLData);
     });
+
 
     socket.on("video_started_to", (Time) => {
       // Handle video started event
@@ -57,6 +63,7 @@ export default function Party() {
       // Handle video paused event
       playerRef.current.pauseVideo();
     });
+
 
     // Clean up the event listeners when the component unmounts
     return () => {
@@ -117,7 +124,7 @@ export default function Party() {
   function HandleSearch(Data) {
     setSrcVideo(String(getYouTubeVideoId(Data)));
   }
-
+  console.log(`room if -------> ${roomId}`);
   return (
     <>
       <div className="animate__animated animate__fadeIn child bg-effect">
@@ -130,9 +137,10 @@ export default function Party() {
               Activity<span className="text-blue-600">X</span>
             </Link>
             <div className="right-side flex items-center">
-              {isPrivate && (
+              {roomId && (
                 <div className="room-id mx-[90px] border-blue-600 border rounded p-[1em]">
-                  Room ID : ggdklgdj2w529582fjd{" "}
+                  <p>{`Room ID : ${roomId}`}</p>
+
                 </div>
               )}
               <div className="search-bar w-fit flex items-center py-[2em] relative">
@@ -177,7 +185,7 @@ export default function Party() {
                 Your Video Should Show here{" "}
               </div>
             )}
-            <Chat isChild={true} fullWindow={false} socket={socket} />
+            <Chat isChild={true} fullWindow={false} socket={socket} roomId={roomId} />
           </div>
         </main>
       </div>

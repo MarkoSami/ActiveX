@@ -10,36 +10,29 @@ import { useContext } from "react";
 export default function Chat({
   isChild = false,
   userName = "",
-  roomId,
+  roomId = "",
   fullWindow = true,
 }) {
   const [messages, setMessages] = useState([]);
   const socket = useContext(SocketContext);
 
   const handleMessageReceived = (data) => {
+    console.log(`message data ${data}`);
     setMessages((prev) => [...prev, data]);
   };
 
   useEffect(() => {
     // socket.on("userIsConnected", connectedUser);
-    socket.on("messageReceived", handleMessageReceived);
+    socket.on("message_received", handleMessageReceived);
 
     return () => {
       // socket.off("userIsConnected", connectedUser);
-      socket.off("messageReceived", handleMessageReceived);
-    };
-  }, [socket]);
-
-  useEffect(() => {
-    socket.connect("http://localhost:3000");
-
-    return () => {
-      // socket.off("userIsConnected", connectedUser);
-      socket.disconnect();
+      socket.off("message_received", handleMessageReceived);
+      // socket.disconnect();
     };
   }, []);
 
-  async function handleSendButton(input) {
+  function handleSendButton(input) {
     const messageText = input.current.value;
 
     if (messageText !== "") {
@@ -53,9 +46,8 @@ export default function Chat({
           new Date(Date.now()).getMinutes(),
       };
 
-      if (roomId) {
-        await socket.emit("sendMessagePrivate", { messageData });
-      } else await socket.emit("sendMessage", { messageData });
+
+      socket.emit("send_message", { messageData });
       setMessages((prev) => [...prev, messageData]);
       input.current.value = "";
       input.current.focus();
@@ -72,9 +64,8 @@ export default function Chat({
 
   return (
     <div
-      className={`bg-effect p-[1em] min-w-[30%] ${
-        isChild ? "h-full" : "h-[100vh]"
-      } h-full min-h-inherit w-full flex items-center justify-center rounded animate__animated animate__zoomIn`}
+      className={`bg-effect p-[1em] min-w-[30%] ${isChild ? "h-full" : "h-[100vh]"
+        } h-full min-h-inherit w-full flex items-center justify-center rounded animate__animated animate__zoomIn`}
     >
       <div className={`rounded w-full h-full`}>
         <section className="mb-[1em] h-full rounded flex flex-col">
